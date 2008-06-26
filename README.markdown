@@ -1,6 +1,6 @@
-# Logbook is a personal, online journal in plain text.
+### Logbook is a personal, online journal in plain text.
 
-## You know, like "Captain's Log"?
+### You know, like "Captain's Log"?
 
 ### Installation:
 
