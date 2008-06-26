@@ -16,8 +16,8 @@
 	|   `-- load.php
 	|-- content
 	|   `-- 2008
-	|       `-- june
-	|           `-- 25.txt
+	|       `-- 06
+	|           `-- 25.markdown
 	`-- public
 	    |-- css
 	    |-- img
