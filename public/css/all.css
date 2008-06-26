@@ -1,0 +1,68 @@
+body {
+	background: #ddd;
+	font: normal 13px "Lucida Grande", Arial, sans-serif;
+}
+#wrapper {
+	background: #fff;
+	margin: 20px;
+	min-height: 400px;
+	position: relative;
+}
+#main {
+}
+#nav {
+  width: 20%;
+  float: left;
+  padding: 20px 3%;
+}
+#entries {
+  width: 68%;
+  padding: 20px 3%;
+  float: right;
+}
+.clearer {
+	font-size: 1px;
+	clear: both;
+}
+h1 {
+  font-size: 18px;
+  padding: 5px 10px;
+  background: #333;
+  color: #999;
+  text-align: right;
+  font-weight: normal;
+}
+#nav h1 {
+  text-align: left;
+}
+h2 {
+  font-size: 16px;
+  padding: 3px 10px;
+  background: #ddd;
+  margin: 15px 0;
+  border-top: solid 3px #999;
+}
+p {
+  margin: 10px 0;
+  padding: 0 10px;
+}
+hr {
+  display: none;
+}
+ul {
+  padding-left: 16px;
+}
+li {
+  margin: 8px 0;
+}
+li.year {
+  font-weight: bold;
+  font-size: 16px;
+}
+li.month {
+  font-size: 14px;
+}
+li.day {
+  font-size: 12px;
+  list-style: square;
+}
