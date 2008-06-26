@@ -10,16 +10,16 @@
 
 ### Site structure:
 
-.
-|-- app
-|   |-- config.yaml
-|   `-- load.php
-|-- content
-|   `-- 2008
-|       `-- june
-|           `-- 25.txt
-`-- public
-    |-- css
-    |-- img
-    |-- js
-    `-- index.php
+	.
+	|-- app
+	|   |-- config.yaml
+	|   `-- load.php
+	|-- content
+	|   `-- 2008
+	|       `-- june
+	|           `-- 25.txt
+	`-- public
+	    |-- css
+	    |-- img
+	    |-- js
+	    `-- index.php
