@@ -8,7 +8,7 @@
 - Set your webserver's document root to `public/`.
 - Write things that are on your mind.
 
-### Site structure:
+### Site structure: (files and folders are the API)
 
 	.
 	|-- app
