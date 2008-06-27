@@ -59,17 +59,21 @@ function get_entry() {
 			$date_parts = explode('-', $_GET['date']);
 
 			$filelist = array();
-			$content = '';
-			while ($file = readdir(CONTENT_DIR.$date_parts[0].'/'.$date_parts[1].'/'.$date_parts[2])) {
+			$content = "<ul>\n";
+			$url = $date_parts[0] . '/' . $date_parts[1] . '/' . $date_parts[2];
+			$dir = opendir(CONTENT_DIR . $url);
+			while ($file = readdir($dir)) {
 				if ( $file{0} == "." )
 					continue;
-
-				$file = preg_replace("/(.*?)\.EXT/", "<a href=\"" . SELF . "/\\1\">\\1</a>", $file);
+				$file = preg_replace('/(.*?)\.markdown/', '<a href="/' . $url . '/\\1">\\1</a>', $file);
+				$content .= "<li>$file</li>\n";
 				array_push($filelist, $file);
 			}
 			closedir($dir);
+			$content .= "</ul>\n";
 
-			return Markdown(file_get_contents(CONTENT_DIR.$date_parts[0].'/'.$date_parts[1].'/'.$date_parts[2].EXT));
+			return $content;
+			// return Markdown(file_get_contents(CONTENT_DIR.$date_parts[0].'/'.$date_parts[1].'/'.$date_parts[2].EXT));
 		}
 	} else {
 		return "Please choose and entry.";
