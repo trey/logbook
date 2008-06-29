@@ -3,39 +3,31 @@
 define('APP_DIR',     dirname(__FILE__).'/');
 define('PUBLIC_DIR',  dirname(__FILE__).'/../public/');
 define('CONTENT_DIR', dirname(__FILE__).'/../content/');
-define('EXT',         '.markdown');
 
-$month_names_en = array(
-	'1' => 'January',
-	'2' => 'February',
-	'3' => 'March',
-	'4' => 'April',
-	'5' => 'May',
-	'6' => 'June',
-	'7' => 'July',
-	'8' => 'August',
-	'9' => 'September',
-	'10' => 'October',
-	'11' => 'November',
-	'12' => 'December'
-	);
+require_once(APP_DIR.'spyc.php');
+$config = Spyc::YAMLLoad(APP_DIR.'config.yaml');
 
 require_once('markdown.php');
 
 foreach(scandir(CONTENT_DIR) as $year) {
 	$year_dir = CONTENT_DIR.$year;
-	if(is_dir($year_dir) && preg_match("/\d\d\d\d/", $year)) {
+	if(preg_match("/\d\d\d\d/", $year) && is_dir($year_dir)) {
 		$months = array();
-		foreach(scandir(CONTENT_DIR.$year) as $month) {
+		foreach(scandir($year_dir) as $month) {
 			$month_dir = $year_dir.'/'.$month;
-			if(is_dir($month_dir) && preg_match("/\d\d/", $month)) {
+			if(preg_match("/\d\d/", $month) && is_dir($month_dir)) {
 				$days = array();
-				foreach(scandir(CONTENT_DIR.$year.'/'.$month) as $file) {
-					$day = str_replace(EXT, '', $file);
-					$file_path = $month_dir.'/'.$file;
-					$date = "$year-$month-$day";
-					if(is_file($file_path) && preg_match("/\d\d/", $day)) {
-						$days[$day] = $date;
+				foreach(scandir($month_dir) as $day) {
+					$day_dir = $month_dir.'/'.$day;
+					if(preg_match("/\d\d/", $day) && is_dir($day_dir)) {
+						$entries = array();
+						foreach(scandir($day_dir) as $entry) {
+							$entry_path = $day_dir.'/'.$entry;
+							if(is_file($entry_path) && preg_match("/^\d{10,}$/", $entry)) {
+								$entries[$entry] = $entry_path;
+							}
+						}
+						$days[$day] = $entries;
 					}
 				}
 				$months[$month] = $days;
@@ -47,38 +39,28 @@ foreach(scandir(CONTENT_DIR) as $year) {
 
 // FUNCTIONS
 function get_month($month_number) {
-	global $month_names_en;
-	return $month_names_en[ltrim($month_number, '0')];
+	global $config;
+	return $config['month_names'][ltrim($month_number, '0')];
 }
 
-function get_entry() {
-	if(isset($_GET['date'])) {
-		if(!preg_match("/\d\d\d\d\-\d\d\-\d\d/", $date) === false) {
-			return "No Entry Found";
-		} else {
-			$date_parts = explode('-', $_GET['date']);
-
-			$filelist = array();
-			$content = "<ul>\n";
-			$url = $date_parts[0] . '/' . $date_parts[1] . '/' . $date_parts[2];
-			$dir = opendir(CONTENT_DIR . $url);
-			while ($file = readdir($dir)) {
-				if ( $file{0} == "." )
-					continue;
-				$file = preg_replace('/(.*?)\.markdown/', '<a href="/' . $url . '/\\1">\\1</a>', $file);
-				$content .= "<li>$file</li>\n";
-				array_push($filelist, $file);
-			}
-			closedir($dir);
-			$content .= "</ul>\n";
-
-			return $content;
-			// return Markdown(file_get_contents(CONTENT_DIR.$date_parts[0].'/'.$date_parts[1].'/'.$date_parts[2].EXT));
-		}
-	} else {
+function get_entries($date) {
+	global $config;
+	global $years;
+	if(empty($date)) {
 		return "Please choose and entry.";
+	} else {
+		if(preg_match("/\d{4}-\d{2}-\d{2}/", $date) == 0) {
+			return "<h1>Invalid Date</h1>";
+		} else {
+			list($y, $m, $d) = explode('-', $date);
+			$html = "<h1>Entries for ".date("l, F j, Y", strtotime("$y-$m-$d"))."</h1>";
+			foreach($years[$y][$m][$d] as $entry => $path) {
+				$time = date('g:i:s a', $entry);
+				$html .= "<h2 class='timestamp'>$time</h2>";
+				$html .= Markdown(file_get_contents($path));
+			}
+			return $html;
+		}
 	}
 }
-
-
 ?>
