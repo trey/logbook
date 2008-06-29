@@ -44,14 +44,16 @@
     return $config['month_names'][ltrim($month_number, '0')];
   }
   
-  function get_entry() {
+  function get_entries($date) {
     global $config;
     global $years;
-    if(isset($_GET['date'])) {
-      if(preg_match("/\d{4}-\d{2}-\d{2}/", $_GET['date']) == 0) {
+    if(empty($date)) {
+      return "Please choose and entry.";
+    } else {
+      if(preg_match("/\d{4}-\d{2}-\d{2}/", $date) == 0) {
         return "<h1>Invalid Date</h1>";
       } else {
-        list($y, $m, $d) = explode('-', $_GET['date']);
+        list($y, $m, $d) = explode('-', $date);
         $html = "<h1>Entries for ".date("l, F j, Y", strtotime("$y-$m-$d"))."</h1>";
         foreach($years[$y][$m][$d] as $entry => $path) {
           $time = date('g:i:s a', $entry);
@@ -60,8 +62,6 @@
         }
         return $html;
       }
-    } else {
-      return "Please choose and entry.";
     }
   }
   

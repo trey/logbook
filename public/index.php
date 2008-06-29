@@ -46,7 +46,7 @@
     </ul>
   </div>
   <div id="entries">
-    <?php echo get_entry(); ?>
+    <?php echo get_entries($_GET['date']); ?>
   </div>
 </div><!--end #main-->
 <div id="footer">
