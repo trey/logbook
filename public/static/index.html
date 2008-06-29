@@ -5,8 +5,12 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<!-- <meta name="description" content="ADD A DESCRIPTION OF THIS WEBSITE"> -->
 	<style type="text/css" media="screen">
-		body { background: #878787; }
+		body { background: #565656; }
 		form input[type=search] { color: #888; width: 200px; }
+		textarea { border: 1px solid #666; }
+		form input[type=submit] {
+			width: 100px;
+		}
 	</style>
 </head>
 <body>
@@ -22,8 +26,8 @@
 			</select> -->
 			<form action="search" method="get" accept-charset="utf-8">
 				<div><input class="search" type="search" name="some_name" value="Search" id="some_name"></div>
-
-				<div><input type="submit" value="Continue &rarr;"></div>
+				<div><textarea name="entry" rows="8" cols="40"></textarea></div>
+				<div><input class="button" type="submit" value="Log It"></div>
 			</form>
 			<div id="primary">
 				<h1>Title of Page</h1>
