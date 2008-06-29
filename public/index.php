@@ -34,8 +34,8 @@
           <?php foreach($months as $month=>$days) { ?>
           <li class="month"><?php echo get_month($month); ?>
             <ul>
-              <?php foreach($days as $day=>$date) { ?>
-              <li class="day"><a href="/?date=<?php echo $date; ?>"><?php echo date("l, \\t\h\e dS", strtotime("$year-$month-$day")); ?></a></li>
+              <?php foreach($days as $day=>$entries) { ?>
+              <li class="day"><a href="/?date=<?php echo "$year-$month-$day"; ?>"><?php echo date("l, \\t\h\e dS", strtotime("$year-$month-$day")); ?></a></li>
               <?php } ?>
             </ul>
           </li>

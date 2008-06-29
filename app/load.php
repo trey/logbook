@@ -12,18 +12,23 @@
   
   foreach(scandir(CONTENT_DIR) as $year) {
     $year_dir = CONTENT_DIR.$year;
-    if(is_dir($year_dir) && preg_match("/\d\d\d\d/", $year)) {
+    if(preg_match("/\d\d\d\d/", $year) && is_dir($year_dir)) {
       $months = array();
-      foreach(scandir(CONTENT_DIR.$year) as $month) {
+      foreach(scandir($year_dir) as $month) {
         $month_dir = $year_dir.'/'.$month;
-        if(is_dir($month_dir) && preg_match("/\d\d/", $month)) {
+        if(preg_match("/\d\d/", $month) && is_dir($month_dir)) {
           $days = array();
-          foreach(scandir(CONTENT_DIR.$year.'/'.$month) as $file) {
-            $day = str_replace($config['ext'], '', $file);
-            $file_path = $month_dir.'/'.$file;
-            $date = "$year-$month-$day";
-            if(is_file($file_path) && preg_match("/\d\d/", $day)) {
-              $days[$day] = $date;
+          foreach(scandir($month_dir) as $day) {
+            $day_dir = $month_dir.'/'.$day;
+            if(preg_match("/\d\d/", $day) && is_dir($day_dir)) {
+              $entries = array();
+              foreach(scandir($day_dir) as $entry) {
+                $entry_path = $day_dir.'/'.$entry;
+                if(is_file($entry_path) && preg_match("/^\d{10,}$/", $entry)) {
+                  $entries[$entry] = $entry_path;
+                }
+              }
+              $days[$day] = $entries;
             }
           }
           $months[$month] = $days;
@@ -41,12 +46,19 @@
   
   function get_entry() {
     global $config;
+    global $years;
     if(isset($_GET['date'])) {
-      if(!preg_match("/\d\d\d\d\-\d\d\-\d\d/", $date) === false) {
-        return "No Entry Found";
+      if(preg_match("/\d{4}-\d{2}-\d{2}/", $_GET['date']) == 0) {
+        return "<h1>Invalid Date</h1>";
       } else {
-        $date_parts = explode('-', $_GET['date']);
-        return Markdown(file_get_contents(CONTENT_DIR.$date_parts[0].'/'.$date_parts[1].'/'.$date_parts[2].$config['ext']));
+        list($y, $m, $d) = explode('-', $_GET['date']);
+        $html = "<h1>Entries for ".date("l, F j, Y", strtotime("$y-$m-$d"))."</h1>";
+        foreach($years[$y][$m][$d] as $entry => $path) {
+          $time = date('g:i:s a', $entry);
+          $html .= "<h2 class='timestamp'>$time</h2>";
+          $html .= Markdown(file_get_contents($path));
+        }
+        return $html;
       }
     } else {
       return "Please choose and entry.";
